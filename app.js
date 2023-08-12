@@ -1,17 +1,18 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const ejs = require("ejs");
 const _ = require("lodash");
 const {homeStartingContent,aboutContent,contactContent} = require("./titles");
 
-mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
+dotenv.config();
+mongoose.connect(process.env.MONGO_URL);
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 const postSchema =  new mongoose.Schema({
@@ -59,6 +60,6 @@ app.get("/posts/:postId", (req, res) => {
    })
 });
 
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
+app.listen( process.env.PORT ||3000, function() {
+  console.log(`Server started on port ${process.env.PORT}`);
 });
